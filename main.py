@@ -421,8 +421,8 @@ if __name__ == "__main__":
     # Plot Results
     plot_results(results)
     
-    # # Save each model separately
-    # save_models_separately(models, save_dir="./models")
+    # Save each model separately
+    save_models_separately(models, save_dir="./models")
     
     # Compare train vs test
     performance_df = plot_train_test_performance(models, X_train, X_test, y_train, y_test)
