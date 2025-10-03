@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Alerts {
+  alert_id     Int       @id @default(autoincrement())
+  message      String
+  severity     String    @db.VarChar(20)
+  triggered_at DateTime  @default(now())
+  status       String    @default("unread") @db.VarChar(20)
+  user_id      Int
+  stateCode    String
+  Locations    Locations @relation(fields: [stateCode], references: [stateCode])
+  Users        Users     @relation(fields: [user_id], references: [id])
+
+  @@index([stateCode])
+}
+
+model Locations {
+  location_id Int        @id @default(autoincrement())
+  name        String     @unique @db.VarChar(100)
+  zipcode     String?
+  stateCode   String     @unique @db.VarChar(5)
+  max_lat     Decimal?   @db.Decimal(9, 6)
+  max_lon     Decimal?   @db.Decimal(9, 6)
+  min_lat     Decimal?   @db.Decimal(9, 6)
+  min_lon     Decimal?   @db.Decimal(9, 6)
+  Alerts      Alerts[]
+  Readings    Readings[]
+  Users       Users[]
+
+  @@index([stateCode])
+}
+
+model Readings {
+  reading_id  BigInt    @id @default(autoincrement())
+  timestamp   DateTime
+  aqi         Int?
+  pm25        Float?
+  temperature Float?
+  humidity    Float?
+  windSpeed   Float?
+  no2         Float?
+  o3          Float?
+  pm10        Float?
+  stateCode   String    @db.VarChar(5)
+  Locations   Locations @relation(fields: [stateCode], references: [stateCode])
+
+  @@unique([stateCode, timestamp], name: "stateCode_timestamp")
+  @@index([stateCode, timestamp])
+}
+
+model Sensors {
+  sensor_id  Int      @id @default(autoincrement())
+  type       String   @db.VarChar(50)
+  created_at DateTime @default(now())
+  lat        Float
+  lon        Float
+  provider   String
+  name       String
+
+  @@unique([sensor_id, provider])
+  @@index([lat, lon])
+}
+
+model Users {
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(100)
+  email      String    @unique @db.VarChar(150)
+  role       String    @default("USER") @db.VarChar(50)
+  created_at DateTime  @default(now())
+  sensitive  Boolean   @default(false)
+  stateCode  String
+  Alerts     Alerts[]
+  Locations  Locations @relation(fields: [stateCode], references: [stateCode])
+
+  @@index([stateCode])
+  @@index([name])
+}
+
+model OtpVerification {
+  id        Int      @id @default(autoincrement())
+  email     String
+  otpHash   String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

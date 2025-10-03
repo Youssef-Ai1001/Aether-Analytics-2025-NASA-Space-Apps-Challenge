@@ -1,0 +1,12 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+/generated/prisma
+data.json 
+needed.js 
+seeding.js
+seeding2.js 
+try.js 
+🤨.docx 
+cron-job.js
