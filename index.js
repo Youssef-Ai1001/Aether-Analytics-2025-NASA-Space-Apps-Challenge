@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express=require('express');
 const app=express();
+const checkForecasts=require('./controllers/forecast');
 // const {PrismaClient}=require('@prisma/client');
 // const prisma=new PrismaClient();
 const PORT=process.env.PORT;
@@ -12,6 +13,7 @@ app.use(express.json());
 
 app.use('/api/dashboard',dashboardRoutes);
 app.use('/api/auth',authRoutes)
+checkForecasts;
 
 app.listen(PORT,(req,res)=>{
     console.log(`APP listening on port ${PORT}`);

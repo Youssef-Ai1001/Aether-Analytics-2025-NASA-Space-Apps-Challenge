@@ -26,6 +26,7 @@ const dashboardData=asyncWrapper(
     //make caching here
     const oneHourAgo=new Date(Date.now() - 60 * 60 * 1000).toISOString();
     const date=oneHourAgo.split('T')[0];
+
     let oldReading=await prisma.readings.findFirst({
       where:{
         stateCode:locationData.stateCode

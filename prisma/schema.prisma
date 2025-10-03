@@ -12,7 +12,6 @@ model Alerts {
   message      String
   severity     String    @db.VarChar(20)
   triggered_at DateTime  @default(now())
-  status       String    @default("unread") @db.VarChar(20)
   user_id      Int
   stateCode    String
   Locations    Locations @relation(fields: [stateCode], references: [stateCode])
@@ -33,6 +32,7 @@ model Locations {
   Alerts      Alerts[]
   Readings    Readings[]
   Users       Users[]
+  Forecast    Forecast[]
 
   @@index([stateCode])
 }
@@ -89,4 +89,18 @@ model OtpVerification {
   otpHash   String
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+model Forecast {
+  id           Int      @id @default(autoincrement())
+  stateCode    String
+  forecastTime DateTime
+  generatedAt  DateTime @default(now())
+  pm25         Float?
+  aqi          Int?
+  metadata     Json?
+
+  Locations Locations @relation(fields: [stateCode], references: [stateCode])
+
+  @@unique([stateCode, forecastTime])
 }
