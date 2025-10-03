@@ -11,7 +11,7 @@ const {pm25Breakpoints,pm10Breakpoints,o3Breakpoints,no2Breakpoints}=require('..
 
 const dashboardData=asyncWrapper(
     async(req,res,next)=>{
-    const lat=req.query.lat,lon=req.query.lon,zipcode=req.query.zipcode;
+    const lat=parseFloat(req.query.lat),lon=parseFloat(req.query.lon),zipcode=req.query.zipcode;
     
     //Get location data
     const locationData=await prisma.locations.findFirst({
@@ -22,7 +22,7 @@ const dashboardData=asyncWrapper(
         max_lon:{gte:lon},
       },
     })
-
+    // console.log(locationData);return;
     //make caching here
     const oneHourAgo=new Date(Date.now() - 60 * 60 * 1000).toISOString();
     const date=oneHourAgo.split('T')[0];

@@ -26,10 +26,10 @@ model Locations {
   name        String     @unique @db.VarChar(100)
   zipcode     String?
   stateCode   String     @unique @db.VarChar(5)
-  max_lat     Decimal?   @db.Decimal(9, 6)
-  max_lon     Decimal?   @db.Decimal(9, 6)
-  min_lat     Decimal?   @db.Decimal(9, 6)
-  min_lon     Decimal?   @db.Decimal(9, 6)
+  max_lat     Float?
+  max_lon     Float?
+  min_lat     Float?
+  min_lon     Float?
   Alerts      Alerts[]
   Readings    Readings[]
   Users       Users[]

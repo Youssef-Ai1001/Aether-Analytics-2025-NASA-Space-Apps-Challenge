@@ -4,4 +4,5 @@ const dashboardController=require('../controllers/dashboard');
 
 router.get('/data',dashboardController.dashboardData)
 
+
 module.exports=router

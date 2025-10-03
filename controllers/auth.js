@@ -5,6 +5,8 @@ const bcrypt=require('bcrypt');
 const {PrismaClient}=require('@prisma/client');
 const prisma=new PrismaClient();
 const generateOTP=require('../utils/generateOTP');
+const appError = require("../utils/appError");
+const httpStatusText = require("../utils/httpStatusText");
 
 const requestOtp =asyncWrapper(
 async (req, res) => {
@@ -73,8 +75,24 @@ async (req, res) => {
   return res.status(201).json({ message: 'User registered successfully' });
 });
 
+const login=asyncWrapper(
+  async(req,res)=>{
+    const {email}=req.body;
+    const emailExist=await prisma.users.findFirst({
+      where:{email}
+    })
+    if(emailExist)
+    {
+      const success={message:"Logged in successfully",statusCode:200}
+      res.status(200).json(success);return;
+    }
+    const failure=appError.create("Please sign up first",400,httpStatusText.FAILED)
+    res.status(400).json(failure);
+  }
+)
 
 module.exports={
     requestOtp,
-    verifyOtpAndRegister
+    verifyOtpAndRegister,
+    login
 }
