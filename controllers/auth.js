@@ -119,6 +119,28 @@ const login=asyncWrapper(
   }
 )
 
+const getUserByEmail=asyncWrapper(
+  async(req,res)=>{
+    const email=req.body.email;
+    const userData=await prisma.users.findFirst({
+      where:{email:email},
+      select:{
+        name:true,email:true,stateCode:true
+      }   
+    })
+    const countryName=await prisma.locations.findFirst({
+      where:{stateCode:userData.stateCode},
+      select:{name:true}
+    })
+    const response={
+      countryName:countryName.name,
+      ...userData
+    }
+    res.status(200).json(response);
+  }
+
+)
+
 const deleteUser=asyncWrapper(
   async(req,res)=>{
   await prisma.users.delete({
@@ -132,5 +154,6 @@ module.exports={
     verifyOtp,
     register,
     login,
-    deleteUser
+    deleteUser,
+    getUserByEmail
 }
