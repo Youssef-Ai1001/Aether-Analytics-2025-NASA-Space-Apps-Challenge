@@ -31,6 +31,7 @@ async (req, res) => {
   await sendOtpEmail(email, otp);
 
   return res.status(200).json({ message: 'OTP sent to your email' });
+  
 });
 
 
