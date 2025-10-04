@@ -1,0 +1,3 @@
+- [x] Remove src/hooks/useApiState.ts file entirely
+- [x] Remove API_INTEGRATION.md file entirely
+- [x] Update TODO.md to remove API-related tasks
