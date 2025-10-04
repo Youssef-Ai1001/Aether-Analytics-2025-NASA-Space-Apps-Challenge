@@ -87,6 +87,7 @@ model OtpVerification {
   id        Int      @id @default(autoincrement())
   email     String
   otpHash   String
+  verified  Boolean  @default(false)
   expiresAt DateTime
   createdAt DateTime @default(now())
 }

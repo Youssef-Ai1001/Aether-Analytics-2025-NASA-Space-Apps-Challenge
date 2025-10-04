@@ -34,9 +34,9 @@ async (req, res) => {
 });
 
 
-const verifyOtpAndRegister = asyncWrapper(
+const verifyOtp = asyncWrapper(
 async (req, res) => {
-  const {name,email,location,sensitive,otp} = req.body;
+  const {email,otp} = req.body;
 
   // Find OTP entry
   const otpRecord = await prisma.otpVerification.findFirst({ where: { email } });
@@ -48,11 +48,37 @@ async (req, res) => {
   }
 
   // Compare OTP
+
+  const otpExist=await prisma.otpVerification.findFirst({
+    where:{
+      email:email
+    }
+  })
+
   const isValid = await bcrypt.compare(otp, otpRecord.otpHash);
   if (!isValid) return res.status(400).json({ message: 'Invalid OTP' });
-
+  await prisma.otpVerification.update({
+    where:{id:otpExist.id},
+    data:{
+      verified:true
+    }
+  })
+   res.status(201).json({ message: 'Verified Successfully' });
   //Location stateCode 
-  const stateCode=await prisma.locations.findFirst({
+});
+
+const register=asyncWrapper(
+  async(req,res)=>{
+    const{name,email,location,sensitive}=req.body;
+    const emailVerfied=await prisma.otpVerification.findFirst({
+      where:{email}
+    })
+    if(!emailVerfied.verified)
+    {
+      const failure=appError.create("Please verify your email",400,httpStatusText.FAILED);
+      return res.status(400).json(failure);
+    }
+    const stateCode=await prisma.locations.findFirst({
     where:{
       name:location
     },
@@ -72,8 +98,9 @@ async (req, res) => {
   // Delete OTP after successful verification
   await prisma.otpVerification.deleteMany({ where: { email } });
 
-  return res.status(201).json({ message: 'User registered successfully' });
-});
+  res.status(201).json({ message: 'User registered successfully' });
+  }
+)
 
 const login=asyncWrapper(
   async(req,res)=>{
@@ -93,6 +120,7 @@ const login=asyncWrapper(
 
 module.exports={
     requestOtp,
-    verifyOtpAndRegister,
+    verifyOtp,
+    register,
     login
 }
