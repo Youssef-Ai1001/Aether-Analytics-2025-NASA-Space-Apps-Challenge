@@ -31,7 +31,7 @@ async (req, res) => {
   await sendOtpEmail(email, otp);
 
   return res.status(200).json({ message: 'OTP sent to your email' });
-  
+
 });
 
 
@@ -119,9 +119,18 @@ const login=asyncWrapper(
   }
 )
 
+const deleteUser=asyncWrapper(
+  async(req,res)=>{
+  await prisma.users.delete({
+  where: { email: req.body.email }
+});
+res.json({Message:"Deleted"})
+  }
+)
 module.exports={
     requestOtp,
     verifyOtp,
     register,
-    login
+    login,
+    deleteUser
 }
