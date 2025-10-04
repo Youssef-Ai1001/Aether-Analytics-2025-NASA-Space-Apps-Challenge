@@ -11,15 +11,12 @@ const {pm25Breakpoints,pm10Breakpoints,o3Breakpoints,no2Breakpoints}=require('..
 
 const dashboardData=asyncWrapper(
     async(req,res,next)=>{
-    const lat=parseFloat(req.query.lat),lon=parseFloat(req.query.lon),zipcode=req.query.zipcode;
+    const stateCode=req.query.stateCode;
     
     //Get location data
     const locationData=await prisma.locations.findFirst({
       where:{
-        min_lat:{lte:lat},
-        max_lat:{gte:lat},
-        min_lon:{lte:lon},
-        max_lon:{gte:lon},
+        stateCode
       },
     })
     // console.log(locationData);return;
@@ -36,7 +33,21 @@ const dashboardData=asyncWrapper(
     {
       oldReading.reading_id=String(oldReading.reading_id);
       
-      res.status(200).json(oldReading);
+      const pm25AQI = calculateAQI(oldReading.pm25, pm25Breakpoints);
+      const pm10AQI = calculateAQI(oldReading.pm10, pm10Breakpoints);
+      const o3AQI = calculateAQI(oldReading.o3, o3Breakpoints);
+      const no2AQI = calculateAQI(oldReading.no2, no2Breakpoints);
+
+      const overallAQI = Math.round((Math.max(pm25AQI, pm10AQI, o3AQI, no2AQI)));   
+     const responseReading = {
+          ...oldReading,
+          pm25: pm25AQI,
+          pm10: pm10AQI,
+          o3:   o3AQI,
+          no2:  no2AQI,
+          aqi:  overallAQI
+      };
+      res.status(200).json(responseReading);
       return;
     }
 
