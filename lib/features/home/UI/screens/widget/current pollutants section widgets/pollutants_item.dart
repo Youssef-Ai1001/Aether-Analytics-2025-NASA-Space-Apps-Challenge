@@ -5,7 +5,7 @@ import '../../../../../../core/utils/app_text_styles.dart';
 
 class PollutantsItem extends StatelessWidget {
   final String title; // مثال: NO₂
-  final int value; // مثال: 45
+  final double value; // مثال: 45
   final String unit; // مثال: ppb
   final String status; // مثال: moderate
 

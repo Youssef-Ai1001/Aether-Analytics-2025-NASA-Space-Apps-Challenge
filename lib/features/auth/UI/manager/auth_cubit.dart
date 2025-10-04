@@ -12,8 +12,11 @@ class AuthCubit extends Cubit<AuthState> {
     final result = await authRepo.auth(email: email);
 
     result.fold(
-      (failure) => emit(AuthFailure(failure)),
-      (statusCode) => emit(AuthSuccess(statusCode)),
+          (failure) => emit(AuthFailure(failure)),
+          (authResult) => emit(AuthResultState(
+        statusCode: authResult.statusCode,
+        isNewUser: authResult.isNewUser,
+      )),
     );
   }
 
@@ -22,8 +25,8 @@ class AuthCubit extends Cubit<AuthState> {
     final result = await authRepo.checkOtp(otp: otp, email: email);
 
     result.fold(
-      (failure) => emit(AuthFailure(failure)),
-      (statusCode) => emit(AuthSuccess(statusCode)),
+          (failure) => emit(AuthFailure(failure)),
+          (statusCode) => emit(AuthSuccess(statusCode)),
     );
   }
 }

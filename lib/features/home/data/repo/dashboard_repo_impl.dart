@@ -14,7 +14,7 @@ class DashboardRepoImpl implements DashboardRepo {
       final response = await apiService.get(
         endPoint: "/dashboard/data?stateCode=NY",
       );
-      final data = DashboardModel.fromJson(response);
+      final data = DashboardModel.fromJson(response.data);
       return Right(data);
     } catch (error) {
       return Left(error.toString());

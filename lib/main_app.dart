@@ -6,6 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nasa_app/android_platform.dart';
 import 'package:nasa_app/core/network/api_service.dart';
 import 'package:nasa_app/features/auth/data/repo/auth_repo_impl.dart';
+import 'package:nasa_app/features/home/UI/manager/dashboard_cubit.dart';
+import 'package:nasa_app/features/home/data/repo/dashboard_repo_impl.dart';
 import 'package:nasa_app/features/profile%20setup/UI/manager/profile_setup_cubit.dart';
 import 'package:nasa_app/features/profile%20setup/data/repo/profile_setup_repo_impl.dart';
 import 'package:nasa_app/ios_platform.dart';
@@ -26,6 +28,12 @@ class MainApp extends StatelessWidget {
         BlocProvider<ProfileSetupCubit>(
           create: (_) =>
               ProfileSetupCubit(ProfileSetupRepoImpl(apiService: ApiService())),
+        ),
+        BlocProvider<DashboardCubit>(
+          create: (_) {
+            return DashboardCubit(DashboardRepoImpl(apiService: ApiService()))
+              ..getDashboardData();
+          },
         ),
       ],
       child: ScreenUtilInit(

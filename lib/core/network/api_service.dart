@@ -24,7 +24,7 @@ class ApiService {
         "$baseUrl$endPoint",
         queryParameters: queryParameters,
       );
-      return response.data;
+      return response;
     } catch (e) {
       throw Exception('GET request failed: $e');
     }

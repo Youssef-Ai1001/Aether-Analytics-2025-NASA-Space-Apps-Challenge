@@ -1,24 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_app/features/home/UI/screens/widget/current%20pollutants%20section%20widgets/pollutants_item.dart';
-import 'package:nasa_app/features/home/data/models/pollutant_model.dart';
+import '../../../../data/models/dashboard_model.dart';
+import '../../../../data/models/pollutant_model.dart';
 
-class PollutantsList extends StatefulWidget {
-  const PollutantsList({super.key});
+class PollutantsList extends StatelessWidget {
+  final DashboardModel dashboard;
 
-  @override
-  State<PollutantsList> createState() => _PollutantsListState();
-}
-
-class _PollutantsListState extends State<PollutantsList> {
-  final List<PollutantModel> pollutants = [
-    PollutantModel(title: "NO₂", value: 45, unit: "ppb", status: "Moderate"),
-    PollutantModel(title: "SO₂", value: 12, unit: "ppb", status: "Good"),
-    PollutantModel(title: "O₃", value: 67, unit: "ppb", status: "Unhealthy"),
-    PollutantModel(title: "CO", value: 2, unit: "ppm", status: "Good"),
-  ];
+  const PollutantsList({super.key, required this.dashboard});
 
   @override
   Widget build(BuildContext context) {
+    final List<PollutantModel> pollutants = [
+      PollutantModel(
+        title: "NO₂",
+        value: dashboard.no2,
+        unit: "ppb",
+        status: "Moderate",
+      ),
+      PollutantModel(
+        title: "O₃",
+        value: dashboard.o3,
+        unit: "ppb",
+        status: "Unhealthy",
+      ),
+      PollutantModel(
+        title: "PM2.5",
+        value: dashboard.pm25,
+        unit: "µg/m³",
+        status: "Moderate",
+      ),
+      PollutantModel(
+        title: "PM10",
+        value: dashboard.pm10,
+        unit: "µg/m³",
+        status: "Good",
+      ),
+    ];
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),

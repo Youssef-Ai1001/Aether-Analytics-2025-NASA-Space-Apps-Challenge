@@ -1,6 +1,6 @@
 class PollutantModel {
   final String title;
-  final int value;
+  final double value;
   final String unit;
   final String status;
 

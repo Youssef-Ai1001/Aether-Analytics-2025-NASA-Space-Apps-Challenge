@@ -32,6 +32,7 @@ class DashboardModel {
     );
   }
 
+
   Map<String, dynamic> toJson() {
     return {
       'aqi': aqi,

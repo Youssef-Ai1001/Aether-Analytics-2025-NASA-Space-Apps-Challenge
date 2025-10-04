@@ -4,7 +4,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nasa_app/core/widgets/custom_app_button.dart';
-import 'package:nasa_app/core/widgets/custom_toast.dart';
 import 'package:nasa_app/features/auth/UI/screens/widget/custom_text_field.dart';
 import '../../../../../core/utils/app_routers.dart';
 import '../../manager/auth_cubit.dart';
@@ -43,18 +42,17 @@ class _AuthFormState extends State<AuthForm> {
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
-        if (state is AuthFailure) {
-          CustomToast.showError(message: state.errorMessage);
-        } else if (state is AuthSuccess) {
-          final formData = _formKey.currentState!.value;
-          final email = formData['email'];
+        if (state is AuthResultState) {
+          final email = _formKey.currentState!.fields['email']!.value;
 
-          if (state.statusCode < 400) {
-            // Login ناجح → نروح على الهوم
-            context.pushReplacement(AppRouters.homeWrapper);
-          } else {
-            // Signup → نروح على صفحة OTP
+          if (!state.isNewUser) {
+            // المستخدم موجود → نروح الهوم
             context.push(AppRouters.verificationOtp, extra: email);
+            
+          } else {
+            // مستخدم جديد → نروح OTP
+            context.pushReplacement(AppRouters.homeWrapper);
+
           }
         }
       },

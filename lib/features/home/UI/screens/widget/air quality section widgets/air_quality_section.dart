@@ -4,14 +4,12 @@ import 'package:nasa_app/core/widgets/custom_background_header.dart';
 import 'air_quality_ratio_part.dart';
 import 'location_part.dart';
 
-class AirQualitySection extends StatefulWidget {
-  const AirQualitySection({super.key});
+class AirQualitySection extends StatelessWidget {
+  final double aqi;
+  final double pm25;
 
-  @override
-  State<AirQualitySection> createState() => _AirQualitySectionState();
-}
+  const AirQualitySection({super.key, required this.aqi, required this.pm25});
 
-class _AirQualitySectionState extends State<AirQualitySection> {
   @override
   Widget build(BuildContext context) {
     return CustomBackgroundHeader(
@@ -25,7 +23,7 @@ class _AirQualitySectionState extends State<AirQualitySection> {
             style: AppTextStyles.headlineMediumWhiteS20,
           ),
           const SizedBox(height: 22),
-          AirQualityRatioPart(ratio: 30),
+          AirQualityRatioPart(ratio: aqi.toInt()),
         ],
       ),
     );
